@@ -1,0 +1,49 @@
+# Arquivos Python compilados
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Ambientes virtuais
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Modelos e dados
+*.pkl
+*.h5
+*.pth
+*.onnx
+*.pb
+data/
+datasets/
+models/
+
+# Gráficos e outputs
+*.png
+*.jpg
+*.jpeg
+*.pdf
+logs/
+outputs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cache de ML
+.cache/
+wandb/
+mlruns/
