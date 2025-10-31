@@ -1,0 +1,116 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+/* Melhorias para checkboxes */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+/* Estilo para listas de tarefas */
+.task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.task-list-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.task-list-item:last-child {
+  border-bottom: none;
+}
+
+/* Destacar tarefas concluídas */
+.task-list-item.checked {
+  opacity: 0.6;
+}
+
+.task-list-item.checked label {
+  text-decoration: line-through;
+  color: #6a737d;
+}
+
+/* Melhorar hierarquia visual */
+.task-list .task-list {
+  padding-left: 30px;
+  margin-top: 5px;
+}
+
+/* Emojis */
+h2, h3 {
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 2px solid #e1e4e8;
+}
+
+h2:first-child, h3:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* Melhorar legibilidade de código inline */
+code {
+  padding: 3px 6px;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+}
+
+/* Espaçamento de parágrafos */
+p {
+  line-height: 1.6;
+  margin: 1em 0;
+}
+
+/* Alertas e notas */
+blockquote {
+  border-left: 4px solid #0366d6;
+  padding-left: 1em;
+  margin: 1em 0;
+  color: #586069;
+}
+
+/* Links */
+a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Botões e navegação */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px 5px;
+  background-color: #0366d6;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.btn:hover {
+  background-color: #0256c7;
+  text-decoration: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .task-list .task-list {
+    padding-left: 15px;
+  }
+
+  h2, h3 {
+    font-size: 1.3em;
+  }
+}
