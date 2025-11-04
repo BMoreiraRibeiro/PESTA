@@ -11,7 +11,11 @@ permissions:
 jobs:
   add-diary-entry:
     # Só executa se a issue tiver o label "diário"
-    if: contains(github.event.issue.labels.*.name, 'diário')
+    # E só executa uma vez (quando opened, ignora labeled se já processado)
+    if: |
+      contains(github.event.issue.labels.*.name, 'diário') &&
+      (github.event.action == 'opened' || 
+       (github.event.action == 'labeled' && github.event.label.name == 'diário'))
     runs-on: ubuntu-latest
     
     steps:
@@ -123,7 +127,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add docs/technical_diary.md
-          git commit -m "docs: adicionar entrada ao diário [$(date +%Y-%m-%d)]"
+          git commit -m "docs: adicionar entrada ao diário [$(date +%Y-%m-%d)] [skip ci]"
           git push
 
       - name: Close Issue and Comment
