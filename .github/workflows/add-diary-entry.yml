@@ -2,7 +2,7 @@ name: Adicionar Entrada ao Diário Técnico
 
 on:
   issues:
-    types: [opened, labeled]
+    types: [opened]
 
 permissions:
   contents: write
@@ -11,11 +11,7 @@ permissions:
 jobs:
   add-diary-entry:
     # Só executa se a issue tiver o label "diário"
-    # E só executa uma vez (quando opened, ignora labeled se já processado)
-    if: |
-      contains(github.event.issue.labels.*.name, 'diário') &&
-      (github.event.action == 'opened' || 
-       (github.event.action == 'labeled' && github.event.label.name == 'diário'))
+    if: contains(github.event.issue.labels.*.name, 'diário')
     runs-on: ubuntu-latest
     
     steps:
