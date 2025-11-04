@@ -1,33 +1,4 @@
 # Diário Técnico - Projeto PESTA
-
-
-## [2025-11-04] - teste
-
-**Categoria:** Hardware
-
-### Contexto
-teste1
-
-### O Que Foi Feito
-1
-2
-3
-
-### Decisões Tomadas
-más
-
-### Resultados
-tudo
-
-### Próximos Passos
-- [ ] esses
-
-### Notas/Observações
-notas muitas
-
----
-
-
 ## 2025-10-31
 
 ### Inicialização do Projeto
