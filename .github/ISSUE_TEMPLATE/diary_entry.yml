@@ -1,0 +1,91 @@
+name: Nova Entrada no Diário
+description: Adicionar uma nova entrada ao diário técnico
+title: "[DIÁRIO] "
+labels: ["documentação", "diário"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: 📌 Título da Entrada
+      description: Título breve e descritivo
+      placeholder: Ex. Configuração do MkDocs
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 🏷️ Categoria
+      description: Escolha a categoria que melhor descreve a entrada
+      options:
+        - Hardware
+        - Software
+        - Testes
+        - Integração
+        - Pesquisa
+        - Decisão
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 📝 Contexto
+      description: Descrição breve do que estava a fazer ou do problema a resolver
+      placeholder: |
+        Descreva o contexto da entrada...
+    validations:
+      required: false
+
+  - type: textarea
+    id: done
+    attributes:
+      label: ✅ O Que Foi Feito
+      description: Lista de itens realizados (um por linha)
+      placeholder: |
+        - Item 1
+        - Item 2
+        - Item 3
+    validations:
+      required: false
+
+  - type: textarea
+    id: decisions
+    attributes:
+      label: 🎯 Decisões Tomadas
+      description: Decisões técnicas importantes e suas justificativas
+      placeholder: |
+        - Decisão 1: Justificativa
+        - Decisão 2: Justificativa
+    validations:
+      required: false
+
+  - type: textarea
+    id: results
+    attributes:
+      label: 📊 Resultados
+      description: O que funcionou ou não funcionou
+      placeholder: Descreva os resultados obtidos...
+    validations:
+      required: false
+
+  - type: textarea
+    id: next
+    attributes:
+      label: 🚀 Próximos Passos
+      description: Tarefas pendentes (serão convertidas em checkboxes)
+      placeholder: |
+        - Tarefa 1
+        - Tarefa 2
+        - Tarefa 3
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 💡 Notas/Observações
+      description: Qualquer informação adicional relevante
+      placeholder: Notas adicionais...
+    validations:
+      required: false

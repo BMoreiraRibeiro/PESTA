@@ -1,0 +1,150 @@
+name: Adicionar Entrada ao Diário Técnico
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  add-diary-entry:
+    # Só executa se a issue tiver o label "diário"
+    if: contains(github.event.issue.labels.*.name, 'diário')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Parse Issue and Add to Diary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const issue = context.payload.issue;
+            const body = issue.body;
+            
+            // Extrair informações do issue body
+            const extractField = (label) => {
+              const regex = new RegExp(`### ${label}\\s*([\\s\\S]*?)(?=###|$)`, 'i');
+              const match = body.match(regex);
+              return match ? match[1].trim() : '';
+            };
+            
+            const title = extractField('📌 Título da Entrada');
+            const category = extractField('🏷️ Categoria');
+            const context = extractField('📝 Contexto');
+            const done = extractField('✅ O Que Foi Feito');
+            const decisions = extractField('🎯 Decisões Tomadas');
+            const results = extractField('📊 Resultados');
+            const next = extractField('🚀 Próximos Passos');
+            const notes = extractField('💡 Notas/Observações');
+            
+            // Obter data atual
+            const date = new Date().toISOString().split('T')[0];
+            
+            // Construir entrada em Markdown
+            let entry = `## [${date}] - ${title}\n\n`;
+            entry += `**Categoria:** ${category}\n\n`;
+            
+            if (context && context !== '_No response_') {
+              entry += `### Contexto\n${context}\n\n`;
+            }
+            
+            if (done && done !== '_No response_') {
+              entry += `### O Que Foi Feito\n${done}\n\n`;
+            }
+            
+            if (decisions && decisions !== '_No response_') {
+              entry += `### Decisões Tomadas\n${decisions}\n\n`;
+            }
+            
+            if (results && results !== '_No response_') {
+              entry += `### Resultados\n${results}\n\n`;
+            }
+            
+            if (next && next !== '_No response_') {
+              // Converter para checkboxes se não tiver já
+              const nextLines = next.split('\n').map(line => {
+                line = line.trim();
+                if (!line) return '';
+                if (line.startsWith('- [ ]') || line.startsWith('- [x]')) {
+                  return line;
+                }
+                if (line.startsWith('-')) {
+                  return line.replace(/^-\s*/, '- [ ] ');
+                }
+                return `- [ ] ${line}`;
+              }).filter(line => line).join('\n');
+              
+              entry += `### Próximos Passos\n${nextLines}\n\n`;
+            }
+            
+            if (notes && notes !== '_No response_') {
+              entry += `### Notas/Observações\n${notes}\n\n`;
+            }
+            
+            entry += `---\n\n`;
+            
+            // Ler arquivo existente
+            const diaryPath = 'docs/technical_diary.md';
+            let diaryContent = fs.readFileSync(diaryPath, 'utf8');
+            
+            // Encontrar onde inserir (após o título principal)
+            const lines = diaryContent.split('\n');
+            let insertIndex = 0;
+            
+            // Procurar linha após o título principal
+            for (let i = 0; i < lines.length; i++) {
+              if (lines[i].startsWith('# ')) {
+                insertIndex = i + 1;
+                // Pular linhas vazias após o título
+                while (insertIndex < lines.length && !lines[insertIndex].trim()) {
+                  insertIndex++;
+                }
+                break;
+              }
+            }
+            
+            // Inserir nova entrada
+            lines.splice(insertIndex, 0, '', entry);
+            
+            // Escrever de volta
+            fs.writeFileSync(diaryPath, lines.join('\n'));
+            
+            console.log('Entrada adicionada com sucesso!');
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/technical_diary.md
+          git commit -m "docs: adicionar entrada ao diário [$(date +%Y-%m-%d)]"
+          git push
+
+      - name: Close Issue and Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const date = new Date().toISOString().split('T')[0];
+            
+            // Comentar na issue
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `✅ **Entrada adicionada com sucesso ao diário técnico!**\n\n📅 Data: ${date}\n\n🔗 [Ver Diário Técnico](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/master/docs/technical_diary.md)\n\n🌐 [Ver no Site](https://${context.repo.owner}.github.io/${context.repo.repo}/technical_diary/)`
+            });
+            
+            // Fechar a issue
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed',
+              labels: ['diário', 'concluído']
+            });
