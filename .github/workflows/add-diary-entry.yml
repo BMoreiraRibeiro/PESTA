@@ -2,7 +2,7 @@ name: Adicionar Entrada ao Diário Técnico
 
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
 
 permissions:
   contents: write
@@ -37,7 +37,7 @@ jobs:
             
             const title = extractField('📌 Título da Entrada');
             const category = extractField('🏷️ Categoria');
-            const context = extractField('📝 Contexto');
+            const contextField = extractField('📝 Contexto');
             const done = extractField('✅ O Que Foi Feito');
             const decisions = extractField('🎯 Decisões Tomadas');
             const results = extractField('📊 Resultados');
@@ -51,8 +51,8 @@ jobs:
             let entry = `## [${date}] - ${title}\n\n`;
             entry += `**Categoria:** ${category}\n\n`;
             
-            if (context && context !== '_No response_') {
-              entry += `### Contexto\n${context}\n\n`;
+            if (contextField && contextField !== '_No response_') {
+              entry += `### Contexto\n${contextField}\n\n`;
             }
             
             if (done && done !== '_No response_') {
