@@ -118,6 +118,14 @@ _(Será atualizado conforme o código for desenvolvido)_
 
 ### Instalação de Dependências
 Para instalar as dependências do projeto (necessário para gerar a documentação):
+
+1. **Criar ambiente virtual (recomendado):**
+```bash
+python3 -m venv venv
+source venv/bin/activate  # No Windows: venv\Scripts\activate
+```
+
+2. **Instalar dependências:**
 ```bash
 pip install -r requirements.txt
 ```
