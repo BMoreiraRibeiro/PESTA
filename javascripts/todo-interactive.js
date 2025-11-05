@@ -1,5 +1,5 @@
 /**
- * TODO Interactive - Adiciona botões "+" para criar subtarefas
+ * TODO Interactive - Adiciona botões "+" e "🗑️" para gerir tarefas
  * Para usar com MkDocs Material
  */
 
@@ -17,34 +17,54 @@ function initializeTodoEnhancements() {
         const items = list.querySelectorAll('.task-list-item');
         
         items.forEach(item => {
-            addAddSubtaskButton(item);
+            addTaskButtons(item);
         });
     });
 }
 
-function addAddSubtaskButton(item) {
-    // Verifica se já tem o botão
-    if (item.querySelector('.add-subtask-btn')) return;
+function addTaskButtons(item) {
+    // Verifica se já tem os botões
+    if (item.querySelector('.task-actions')) return;
 
-    // Cria o botão "+"
-    const button = document.createElement('button');
-    button.className = 'add-subtask-btn';
-    button.innerHTML = '➕';
-    button.title = 'Adicionar subtarefa';
+    // Cria container para os botões
+    const actionsContainer = document.createElement('div');
+    actionsContainer.className = 'task-actions';
+
+    // Botão "+" para adicionar subtarefa
+    const addButton = document.createElement('button');
+    addButton.className = 'task-btn add-subtask-btn';
+    addButton.innerHTML = '➕';
+    addButton.title = 'Adicionar subtarefa';
     
-    button.onclick = (e) => {
+    addButton.onclick = (e) => {
         e.preventDefault();
         e.stopPropagation();
         addSubtaskPrompt(item);
     };
 
-    // Adiciona o botão ao item
+    // Botão "🗑️" para eliminar tarefa
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'task-btn delete-task-btn';
+    deleteButton.innerHTML = '🗑️';
+    deleteButton.title = 'Eliminar tarefa';
+    
+    deleteButton.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        deleteTask(item);
+    };
+
+    // Adiciona botões ao container
+    actionsContainer.appendChild(addButton);
+    actionsContainer.appendChild(deleteButton);
+
+    // Adiciona o container ao item
     const label = item.querySelector('label');
     if (label) {
         label.style.display = 'flex';
         label.style.alignItems = 'center';
         label.style.gap = '8px';
-        label.appendChild(button);
+        label.appendChild(actionsContainer);
     }
 }
 
@@ -70,11 +90,37 @@ function addSubtaskPrompt(parentItem) {
     // Adiciona a subtarefa
     subtasksList.appendChild(newSubtask);
     
-    // Adiciona botão "+" na nova subtarefa
-    addAddSubtaskButton(newSubtask);
+    // Adiciona botões na nova subtarefa
+    addTaskButtons(newSubtask);
     
     // Mostra notificação
-    showNotification('Subtarefa adicionada! (Nota: não será salva permanentemente)', 'success');
+    showNotification('✅ Subtarefa adicionada! (Nota: não será salva permanentemente)', 'success');
+}
+
+function deleteTask(item) {
+    // Conta subtarefas
+    const subtasks = item.querySelectorAll('.task-list-item');
+    const subtaskCount = subtasks.length;
+    
+    // Mensagem de confirmação
+    let confirmMessage = 'Tem certeza que deseja eliminar esta tarefa?';
+    if (subtaskCount > 0) {
+        confirmMessage = `Tem certeza que deseja eliminar esta tarefa e TODAS as suas ${subtaskCount} subtarefa(s)?`;
+    }
+    
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+
+    // Remove o item com animação
+    item.style.transition = 'all 0.3s ease';
+    item.style.opacity = '0';
+    item.style.transform = 'translateX(-20px)';
+    
+    setTimeout(() => {
+        item.remove();
+        showNotification('🗑️ Tarefa eliminada! (Nota: não será salva permanentemente)', 'info');
+    }, 300);
 }
 
 function createSubtaskElement(text) {
@@ -127,46 +173,86 @@ function showNotification(message, type = 'info') {
 // CSS para os botões e notificações
 const style = document.createElement('style');
 style.textContent = `
-    .add-subtask-btn {
-        background: #0366d6;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 2px 8px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s;
-        opacity: 0;
+    /* Container dos botões */
+    .task-actions {
+        display: flex;
+        gap: 4px;
         margin-left: auto;
     }
 
-    .task-list-item:hover .add-subtask-btn {
-        opacity: 1;
+    /* Estilo base dos botões */
+    .task-btn {
+        background: white;
+        border: 2px solid #d1d5da;
+        border-radius: 6px;
+        padding: 4px 10px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.2s ease;
+        opacity: 1; /* Sempre visível! */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        height: 32px;
+    }
+
+    /* Botão adicionar subtarefa */
+    .add-subtask-btn {
+        border-color: #0366d6;
+        color: #0366d6;
     }
 
     .add-subtask-btn:hover {
-        background: #0256b8;
+        background: #0366d6;
+        color: white;
         transform: scale(1.1);
+        box-shadow: 0 2px 8px rgba(3, 102, 214, 0.3);
     }
 
     .add-subtask-btn:active {
         transform: scale(0.95);
     }
 
+    /* Botão eliminar tarefa */
+    .delete-task-btn {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+    .delete-task-btn:hover {
+        background: #dc3545;
+        color: white;
+        transform: scale(1.1);
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+    }
+
+    .delete-task-btn:active {
+        transform: scale(0.95);
+    }
+
+    /* Animação suave ao remover */
+    .task-list-item {
+        transition: all 0.3s ease;
+    }
+
+    /* Notificações */
     .todo-notification {
         position: fixed;
         bottom: 24px;
         right: 24px;
         background: #24292e;
         color: white;
-        padding: 12px 24px;
+        padding: 16px 24px;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         opacity: 0;
         transform: translateY(20px);
         transition: all 0.3s ease;
         z-index: 9999;
-        max-width: 300px;
+        max-width: 350px;
+        font-size: 14px;
+        line-height: 1.5;
     }
 
     .todo-notification.show {
@@ -187,9 +273,41 @@ style.textContent = `
         color: #000;
     }
 
+    .todo-notification-info {
+        background: #17a2b8;
+    }
+
     /* Melhorar layout dos labels */
     .task-list-item label {
         width: 100%;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    /* Espaçamento do texto da tarefa */
+    .task-list-item label > span {
+        flex: 1;
+    }
+
+    /* Responsivo para mobile */
+    @media (max-width: 768px) {
+        .task-btn {
+            min-width: 36px;
+            height: 36px;
+            font-size: 18px;
+        }
+
+        .task-actions {
+            gap: 6px;
+        }
+
+        .todo-notification {
+            bottom: 16px;
+            right: 16px;
+            left: 16px;
+            max-width: none;
+        }
     }
 `;
 document.head.appendChild(style);
