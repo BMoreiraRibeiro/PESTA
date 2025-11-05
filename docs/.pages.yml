@@ -1,0 +1,5 @@
+nav:
+  - Início: index.md
+  - Tarefas: TODO.md
+  - Diário Técnico: technical_diary_entries
+  - Adicionar Entrada: add_entry.md

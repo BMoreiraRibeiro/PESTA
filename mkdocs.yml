@@ -84,10 +84,4 @@ extra:
 extra_javascript:
   - javascripts/todo-interactive.js
 
-nav:
-  - Início: index.md
-  - Tarefas: TODO.md
-  - Diário Técnico: technical_diary_entries/index.md
-  - Adicionar Entrada: add_entry.md
-
 copyright: Copyright &copy; 2025 Bruno Moreira Ribeiro

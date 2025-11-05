@@ -1,4 +1,4 @@
-# TODO List - Projeto PESTA
+# 📋Tarefas
 ## Automatic Airsoft Detection Tower
 
 **Última atualização:** 2025-10-31

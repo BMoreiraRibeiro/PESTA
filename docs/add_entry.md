@@ -370,7 +370,7 @@ document.getElementById('date').valueAsDate = new Date();
 
 ---
 
-[📝 Ver Diário Técnico](technical_diary.md) | [🏠 Voltar ao Início](index.md)
+[📝 Ver Diário Técnico](technical_diary_entries/index.md) | [🏠 Voltar ao Início](index.md)
 
 ---
 
@@ -566,4 +566,4 @@ document.getElementById('date').valueAsDate = new Date();
 
 ---
 
-[� Ver Diário Técnico](technical_diary.md) | [🏠 Voltar ao Início](index.md)
+[� Ver Diário Técnico](technical_diary_entries/index.md) | [🏠 Voltar ao Início](index.md)
