@@ -1,6 +1,9 @@
 # Diário Técnico - Projeto PESTA
 
 
+
+- [2025-11-05 - TESTE](./technical_diary_entries/2025-11-05-teste.md)
+
 ## [2025-11-04] - TESTE
 
 **Categoria:** Hardware
