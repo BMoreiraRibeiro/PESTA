@@ -114,7 +114,23 @@ _(Será atualizado conforme o código for desenvolvido)_
 ### Software Necessário
 - Raspberry Pi OS (Bullseye ou mais recente)
 - Python 3.9+
-- Bibliotecas (ver `requirements.txt` quando disponível)
+- Bibliotecas (ver `requirements.txt`)
+
+### Instalação de Dependências
+Para instalar as dependências do projeto (necessário para gerar a documentação):
+```bash
+pip install -r requirements.txt
+```
+
+Para servir a documentação localmente:
+```bash
+mkdocs serve
+```
+
+Para construir a documentação:
+```bash
+mkdocs build
+```
 
 ---
 
