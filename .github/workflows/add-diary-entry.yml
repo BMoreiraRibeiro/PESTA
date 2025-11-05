@@ -20,125 +20,110 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Parse Issue and Add to Diary
+      - name: Process Issue and Create Diary Page
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
             const issue = context.payload.issue;
-            const body = issue.body;
-            
-            // Extrair informações do issue body
+            const body = issue.body || '';
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
             const extractField = (label) => {
               const regex = new RegExp(`### ${label}\\s*([\\s\\S]*?)(?=###|$)`, 'i');
               const match = body.match(regex);
               return match ? match[1].trim() : '';
             };
-            
-            const title = extractField('📌 Título da Entrada');
-            const category = extractField('🏷️ Categoria') || extractField('🏷️ Tema / Assunto') || 'Gerais';
-            const description = extractField('📝 Contexto') || extractField('� Descrição');
-            const notes = extractField('� Notas/Observações') || extractField('💡 Notas/Observações');
-            
-            // Obter data atual
+
+            const title = extractField('📌 Título da Entrada') || '[sem título]';
+            const category = extractField('🏷️ Tema / Assunto') || extractField('🏷️ Categoria') || 'Gerais';
+            const description = extractField('📝 Descrição') || extractField('📝 Contexto') || '';
+            const notes = extractField('💡 Notas/Observações') || '';
+
             const date = new Date().toISOString().split('T')[0];
-            
-            // Construir entrada em Markdown
-            let entry = `## [${date}] - ${title}\n\n`;
-            entry += `**Categoria:** ${category}\n\n`;
-            
-            if (contextField && contextField !== '_No response_') {
-              entry += `### Contexto\n${contextField}\n\n`;
-            }
-            
-            if (description && description !== '_No response_') {
-              entry += `### Descrição\n${description}\n\n`;
-            }
+            const slugBase = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'entry';
 
-            if (notes && notes !== '_No response_') {
-              entry += `### Notas/Observações\n${notes}\n\n`;
-            }
-            
-            // Inserir nova entrada
-            lines.splice(insertIndex, 0, '', entry);
-            
-            // Escrever de volta
-            fs.writeFileSync(diaryPath, lines.join('\n'));
-            
-            console.log('Entrada adicionada com sucesso!');
-
-      - name: Commit and Push
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add docs/technical_diary.md
-          git commit -m "docs: adicionar entrada ao diário [$(date +%Y-%m-%d)] [skip ci]"
-          git push
-
-      - name: Close Issue and Comment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const date = new Date().toISOString().split('T')[0];
-            
-            // Obter data atual
-            const date = new Date().toISOString().split('T')[0];
-
-            // Normalizar título para filename
-            const slug = title.toLowerCase()
-              .replace(/[^a-z0-9]+/g, '-')
-              .replace(/(^-|-$)/g, '');
-
-            // Diretório e caminho do novo ficheiro
-            const entriesDir = 'docs/technical_diary_entries';
-            fs.mkdirSync(entriesDir, { recursive: true });
-            const filename = `${date}-${slug}.md`;
-            const filePath = `${entriesDir}/${filename}`;
-
-            // Construir conteúdo do ficheiro com front-matter
-            let fileContent = `---\n`;
-            fileContent += `title: "[${date}] - ${title}"\n`;
-            fileContent += `date: ${date}\n`;
-            fileContent += `category: ${category}\n`;
-            fileContent += `---\n\n`;
-            fileContent += `# [${date}] - ${title}\n\n`;
-
-            if (description && description !== '_No response_') {
-              fileContent += `### Descrição\n${description}\n\n`;
+            // ensure unique filename (append counter if exists)
+            let counter = 0;
+            let filename;
+            let filePath;
+            while (true) {
+              const suffix = counter === 0 ? '' : `-${counter}`;
+              filename = `${date}-${slugBase}${suffix}.md`;
+              filePath = `docs/technical_diary_entries/${filename}`;
+              try {
+                await github.rest.repos.getContent({ owner, repo, path: filePath });
+                counter++;
+              } catch (e) {
+                // not found -> ok to use
+                break;
+              }
             }
 
-            if (notes && notes !== '_No response_') {
-              fileContent += `### Notas/Observações\n${notes}\n\n`;
-            }
-
+            const frontMatter = `---\ntitle: "[${date}] - ${title}"\ndate: ${date}\ncategory: ${category}\n---\n\n`;
+            let fileContent = frontMatter + `# [${date}] - ${title}\n\n`;
+            if (description) fileContent += `### Descrição\n${description}\n\n`;
+            if (notes) fileContent += `### Notas/Observações\n${notes}\n\n`;
             fileContent += `---\n`;
 
-            // Escrever novo ficheiro
-            fs.writeFileSync(filePath, fileContent, 'utf8');
+            const contentBase64 = Buffer.from(fileContent, 'utf8').toString('base64');
 
-            // Atualizar índice (docs/technical_diary.md) adicionando link para a nova página
+            // create the file in the repo
+            await github.rest.repos.createOrUpdateFileContents({
+              owner,
+              repo,
+              path: filePath,
+              message: `docs: adicionar entrada ao diário ${date} - ${title} [skip ci]`,
+              content: contentBase64,
+              committer: { name: 'github-actions[bot]', email: 'github-actions[bot]@users.noreply.github.com' },
+              author: { name: 'github-actions[bot]', email: 'github-actions[bot]@users.noreply.github.com' }
+            });
+
+            // try to update the index file with a link
             const indexPath = 'docs/technical_diary.md';
             try {
-              let indexContent = fs.readFileSync(indexPath, 'utf8');
+              const indexResp = await github.rest.repos.getContent({ owner, repo, path: indexPath });
+              const indexSha = indexResp.data.sha;
+              const indexContent = Buffer.from(indexResp.data.content, indexResp.data.encoding).toString('utf8');
               const indexLines = indexContent.split('\n');
               let insertIndex = 0;
               for (let i = 0; i < indexLines.length; i++) {
                 if (indexLines[i].startsWith('# ')) {
                   insertIndex = i + 1;
-                  while (insertIndex < indexLines.length && !indexLines[insertIndex].trim()) {
-                    insertIndex++;
-                  }
+                  while (insertIndex < indexLines.length && !indexLines[insertIndex].trim()) insertIndex++;
                   break;
                 }
               }
-
               const relativePath = `technical_diary_entries/${filename}`;
               const linkLine = `- [${date} - ${title}](./${relativePath})`;
               indexLines.splice(insertIndex, 0, '', linkLine, '');
-              fs.writeFileSync(indexPath, indexLines.join('\n'), 'utf8');
+              const newIndexContent = indexLines.join('\n');
+              const newIndexBase64 = Buffer.from(newIndexContent, 'utf8').toString('base64');
+              await github.rest.repos.createOrUpdateFileContents({
+                owner,
+                repo,
+                path: indexPath,
+                message: `docs: adicionar link para entrada ${filename} [skip ci]`,
+                content: newIndexBase64,
+                sha: indexSha,
+                committer: { name: 'github-actions[bot]', email: 'github-actions[bot]@users.noreply.github.com' },
+                author: { name: 'github-actions[bot]', email: 'github-actions[bot]@users.noreply.github.com' }
+              });
             } catch (err) {
-              // Se o ficheiro index não existir, ignorar
-              console.log('Não foi possível atualizar o índice:', err.message);
+              core && core.info && core.info(`Índice não atualizado: ${err.message}`);
             }
 
-            console.log('Entrada adicionada com sucesso como página individual!');
+            // Comment and close the issue
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: issue.number,
+              body: `✅ **Entrada adicionada ao diário técnico!**\n\n📅 Data: ${date}\n\n🔗 [Ver página](/${repo.replace(/[^/]+$/,'')}${filePath})`
+            });
+
+            await github.rest.issues.update({
+              owner,
+              repo,
+              issue_number: issue.number,
+              state: 'closed'
+            });
