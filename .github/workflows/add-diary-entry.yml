@@ -118,7 +118,7 @@ jobs:
               owner,
               repo,
               issue_number: issue.number,
-              body: `✅ **Entrada adicionada ao diário técnico!**\n\n📅 Data: ${date}\n\n🔗 [Ver página](/${repo.replace(/[^/]+$/,'')}${filePath})`
+              body: `✅ **Entrada adicionada ao diário técnico!**\n\n📅 Data: ${date}\n\n🔗 [Ver página](https://github.com/${owner}/${repo}/blob/master/${filePath})`
             });
 
             await github.rest.issues.update({
