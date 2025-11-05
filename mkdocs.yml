@@ -81,6 +81,9 @@ extra:
       link: https://github.com/BMoreiraRibeiro
   generator: false
 
+extra_javascript:
+  - javascripts/todo-interactive.js
+
 nav:
   - Início: index.md
   - Tarefas: TODO.md
