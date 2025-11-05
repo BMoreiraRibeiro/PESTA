@@ -7,6 +7,7 @@ on:
 permissions:
   contents: write
   issues: write
+  actions: write
 
 jobs:
   add-diary-entry:
@@ -143,3 +144,15 @@ jobs:
               issue_number: issue.number,
               state: 'closed'
             });
+
+            // Trigger the deploy workflow explicitly so the site is published
+            try {
+              await github.rest.actions.createWorkflowDispatch({
+                owner,
+                repo,
+                workflow_id: 'deploy-mkdocs.yml',
+                ref: 'master'
+              });
+            } catch (dispatchErr) {
+              core && core.info && core.info(`Falha ao disparar workflow de deploy: ${dispatchErr.message}`);
+            }
