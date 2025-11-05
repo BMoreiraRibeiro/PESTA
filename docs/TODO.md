@@ -193,7 +193,7 @@
 ## 📝 Fase 8: Documentação Técnica
 - [ ] **Estrutura de documentação**
   - [ ] Criar pasta `docs/` com arquivos markdown
-  - [ ] `technical_diary.md` - diário de desenvolvimento
+  - [ ] `technical_diary_entries/index.md` - diário de desenvolvimento
   - [ ] `hardware_setup.md` - documentação de hardware
   - [ ] `software_architecture.md` - arquitetura de software
   - [ ] `ml_models.md` - documentação dos modelos ML
@@ -310,7 +310,7 @@
 - **Prioridade 1:** Estabelecer comunicação com hardware (câmera + motores)
 - **Prioridade 2:** Pipeline de ML funcional (mesmo que simples)
 - **Prioridade 3:** Integração e testes práticos
-- Sempre documentar decisões técnicas no `docs/technical_diary.md`
+- Sempre documentar decisões técnicas no `docs/technical_diary_entries/index.md`
 - Fazer commits frequentes no Git
 - Testar em condições reais o mais cedo possível
 

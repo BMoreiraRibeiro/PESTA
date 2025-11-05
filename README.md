@@ -45,7 +45,7 @@ PESTA/
 ├── TODO.md                  # Lista de tarefas do projeto
 ├── README.md                # Este arquivo
 ├── docs/                    # Documentação técnica
-│   ├── technical_diary.md   # Diário de desenvolvimento
+│   ├── technical_diary_entries/  # Diário de desenvolvimento (cada entrada em ficheiro próprio)
 │   ├── hardware_setup.md    # Documentação de hardware
 │   ├── software_architecture.md
 │   ├── ml_models.md
@@ -90,7 +90,7 @@ Consulte `TODO.md` para ver todas as tarefas do projeto organizadas por fase.
 
 ### Documentação
 Toda documentação técnica está em `docs/`:
-- **Para entender decisões:** Leia `technical_diary.md`
+- **Para entender decisões:** Leia `docs/technical_diary_entries/index.md`
 - **Para replicar hardware:** Consulte `hardware_setup.md`
 - **Para entender o código:** Veja `software_architecture.md`
 - **Para informações de ML:** Consulte `ml_models.md`
@@ -122,7 +122,7 @@ _(Será atualizado conforme o código for desenvolvido)_
 
 Este é um projeto acadêmico. Para manter a disciplina do projeto:
 1. **Sempre** consulte `TODO.md` antes de iniciar trabalho
-2. **Sempre** documente decisões em `docs/technical_diary.md`
+2. **Sempre** documente decisões em `docs/technical_diary_entries/index.md`
 3. **Sempre** atualize o TODO quando completar tarefas
 4. Faça commits frequentes e descritivos no Git
 

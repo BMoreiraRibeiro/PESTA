@@ -193,7 +193,7 @@
 ## 📝 Fase 8: Documentação Técnica
 - [ ] **Estrutura de documentação**
   - [ ] Criar pasta `docs/` com arquivos markdown
-  - [ ] `technical_diary.md` - diário de desenvolvimento
+  - [ ] `technical_diary_entries/index.md` - diário de desenvolvimento
   - [ ] `hardware_setup.md` - documentação de hardware
   - [ ] `software_architecture.md` - arquitetura de software
   - [ ] `ml_models.md` - documentação dos modelos ML

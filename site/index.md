@@ -19,7 +19,7 @@ Clique no link acima para visualizar e gerenciar todas as tarefas do projeto.
 
 - [📋 TODO List](TODO.md) - Lista completa de tarefas com checkboxes interativas
 - [📖 README](README.md) - Documentação geral do projeto
-- [📝 Diário Técnico](docs/technical_diary.md) - Registro de decisões e progresso
+- [📝 Diário Técnico](docs/technical_diary_entries/index.md) - Registro de decisões e progresso
 
 ---
 

@@ -11,7 +11,7 @@ Sistema de gerenciamento de tarefas para o projeto acadêmico PESTA.
 ## � Acesso Rápido
 
 - [📋 Tarefas (TODO)](TODO.md) - Acompanhar progresso do projeto
-- [ Diário Técnico](technical_diary.md) - Registar decisões e aprendizagens
+- [ Diário Técnico](technical_diary_entries/index.md) - Registar decisões e aprendizagens
 - [➕ Adicionar Entrada](add_entry.md) - Template para novas entradas no diário
 
 ---

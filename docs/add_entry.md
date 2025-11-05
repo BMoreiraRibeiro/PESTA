@@ -141,7 +141,7 @@ function submitToGitHub() {
 
 ---
 
-[📝 Ver Diário Técnico](technical_diary.md) | [🏠 Voltar ao Início](index.md)
+[📝 Ver Diário Técnico](technical_diary_entries/index.md) | [🏠 Voltar ao Início](index.md)
 
 ---
 ---
@@ -303,7 +303,7 @@ function generateMarkdown() {
     <pre id="generatedText" style="margin: 0; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.9rem;"></pre>
   </div>
   <p style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
-    <strong>📌 Próximo passo:</strong> Copie o texto acima e cole no início do arquivo <code>docs/technical_diary.md</code>
+  <strong>📌 Próximo passo:</strong> Copie o texto acima e cole no início do arquivo <code>docs/technical_diary_entries/index.md</code>
   </p>
 </div>
 
@@ -447,7 +447,7 @@ document.getElementById('date').valueAsDate = new Date();
     <pre id="generatedText" style="margin: 0; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.9rem;"></pre>
   </div>
   <p style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
-    <strong>📌 Próximo passo:</strong> Copie o texto acima e cole no início do arquivo <code>docs/technical_diary.md</code> (logo após o título principal).
+  <strong>📌 Próximo passo:</strong> Copie o texto acima e cole no início do arquivo <code>docs/technical_diary_entries/index.md</code> (logo após o título principal).
   </p>
 </div>
 
@@ -529,7 +529,7 @@ function copyToClipboard() {
       button.style.background = '#4caf50';
     }, 2000);
     
-    alert('✅ Entrada copiada para a área de transferência!\n\nAgora cole no arquivo docs/technical_diary.md');
+  alert('✅ Entrada copiada para a área de transferência!\n\nAgora cole no arquivo docs/technical_diary_entries/index.md');
   }).catch(err => {
     alert('❌ Erro ao copiar. Selecione e copie manualmente (Ctrl+C).');
   });
@@ -546,11 +546,11 @@ document.getElementById('date').valueAsDate = new Date();
 1. **Preencha o formulário** acima com as informações da entrada
 2. Clique em **"Gerar Entrada"** para visualizar o resultado
 3. Clique em **"Copiar para Área de Transferência"**
-4. **Abra** o arquivo `docs/technical_diary.md`
+4. **Abra** o arquivo `docs/technical_diary_entries/index.md`
 5. **Cole** o texto no início do arquivo (logo após o título `# Diário Técnico`)
 6. **Salve** e faça commit:
    ```bash
-   git add docs/technical_diary.md
+  git add docs/technical_diary_entries/index.md
    git commit -m "docs: adicionar entrada [DATA]"
    git push
    ```
