@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://bmoreiraribeiro.github.io/PESTA/add_entry/">
       
       
-        <link rel="prev" href="../technical_diary/">
+        <link rel="prev" href="../technical_diary_entries/">
       
       
       
@@ -266,7 +266,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../technical_diary/" class="md-tabs__link">
+      <a href="../technical_diary_entries/" class="md-tabs__link">
         
   
   
@@ -398,7 +398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../technical_diary/" class="md-nav__link">
+      <a href="../technical_diary_entries/" class="md-nav__link">
         
   
   
@@ -649,7 +649,7 @@ function submitToGitHub() {
 </script>
 
 <hr />
-<p><a href="../technical_diary/">📝 Ver Diário Técnico</a> | <a href="../">🏠 Voltar ao Início</a></p>
+<p><a href="../technical_diary_entries/">📝 Ver Diário Técnico</a> | <a href="../">🏠 Voltar ao Início</a></p>
 <h2 id="-">---<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
 <h2 id="title-adicionar-entrada-ao-diario">title: Adicionar Entrada ao Diário<a class="headerlink" href="#title-adicionar-entrada-ao-diario" title="Permanent link">&para;</a></h2>
 <h1 id="nova-entrada-no-diario-tecnico_1">➕ Nova Entrada no Diário Técnico<a class="headerlink" href="#nova-entrada-no-diario-tecnico_1" title="Permanent link">&para;</a></h1>
@@ -799,7 +799,7 @@ function generateMarkdown() {
     <pre id="generatedText" style="margin: 0; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.9rem;"></pre>
   </div>
   <p style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
-    <strong>📌 Próximo passo:</strong> Copie o texto acima e cole no início do arquivo <code>docs/technical_diary.md</code>
+  <strong>📌 Próximo passo:</strong> Copie o texto acima e cole no início do arquivo <code>docs/technical_diary_entries/index.md</code>
   </p>
 </div>
 
@@ -940,7 +940,7 @@ document.getElementById('date').valueAsDate = new Date();
     <pre id="generatedText" style="margin: 0; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.9rem;"></pre>
   </div>
   <p style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
-    <strong>📌 Próximo passo:</strong> Copie o texto acima e cole no início do arquivo <code>docs/technical_diary.md</code> (logo após o título principal).
+  <strong>📌 Próximo passo:</strong> Copie o texto acima e cole no início do arquivo <code>docs/technical_diary_entries/index.md</code> (logo após o título principal).
   </p>
 </div>
 
@@ -1022,7 +1022,7 @@ function copyToClipboard() {
       button.style.background = '#4caf50';
     }, 2000);
 
-    alert('✅ Entrada copiada para a área de transferência!\n\nAgora cole no arquivo docs/technical_diary.md');
+  alert('✅ Entrada copiada para a área de transferência!\n\nAgora cole no arquivo docs/technical_diary_entries/index.md');
   }).catch(err => {
     alert('❌ Erro ao copiar. Selecione e copie manualmente (Ctrl+C).');
   });
@@ -1038,13 +1038,13 @@ document.getElementById('date').valueAsDate = new Date();
 <li><strong>Preencha o formulário</strong> acima com as informações da entrada</li>
 <li>Clique em <strong>"Gerar Entrada"</strong> para visualizar o resultado</li>
 <li>Clique em <strong>"Copiar para Área de Transferência"</strong></li>
-<li><strong>Abra</strong> o arquivo <code>docs/technical_diary.md</code></li>
+<li><strong>Abra</strong> o arquivo <code>docs/technical_diary_entries/index.md</code></li>
 <li><strong>Cole</strong> o texto no início do arquivo (logo após o título <code># Diário Técnico</code>)</li>
 <li><strong>Salve</strong> e faça commit:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>add<span class="w"> </span>docs/technical_diary.md
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: adicionar entrada [DATA]&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>push
-</code></pre></div></li>
+   <code>bash
+  git add docs/technical_diary_entries/index.md
+   git commit -m "docs: adicionar entrada [DATA]"
+   git push</code></li>
 </ol>
 <hr />
 <h2 id="dicas">💡 Dicas<a class="headerlink" href="#dicas" title="Permanent link">&para;</a></h2>
