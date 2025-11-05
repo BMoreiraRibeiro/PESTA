@@ -1,5 +1,5 @@
 name: Nova Entrada no Diário
-description: Adicionar uma nova entrada ao diário técnico
+description: Adicionar uma nova entrada ao diário técnico (fields: título, tema/assunto, descrição, notas)
 title: "[DIÁRIO] "
 labels: ["documentação", "diário"]
 body:
@@ -15,69 +15,25 @@ body:
   - type: dropdown
     id: category
     attributes:
-      label: 🏷️ Categoria
-      description: Escolha a categoria que melhor descreve a entrada
+      label: 🏷️ Tema / Assunto
+      description: Escolha o tema ou assunto que melhor descreve a entrada
       options:
-        - Hardware
-        - Software
-        - Testes
-        - Integração
+        - Gerais
+        - Configuração
+        - Documentação
         - Pesquisa
         - Decisão
+        - Outros
     validations:
       required: true
 
   - type: textarea
     id: context
     attributes:
-      label: 📝 Contexto
-      description: Descrição breve do que estava a fazer ou do problema a resolver
+      label: 📝 Descrição
+      description: Descreva o que foi feito/observado ou o objetivo desta entrada
       placeholder: |
-        Descreva o contexto da entrada...
-    validations:
-      required: false
-
-  - type: textarea
-    id: done
-    attributes:
-      label: ✅ O Que Foi Feito
-      description: Lista de itens realizados (um por linha)
-      placeholder: |
-        - Item 1
-        - Item 2
-        - Item 3
-    validations:
-      required: false
-
-  - type: textarea
-    id: decisions
-    attributes:
-      label: 🎯 Decisões Tomadas
-      description: Decisões técnicas importantes e suas justificativas
-      placeholder: |
-        - Decisão 1: Justificativa
-        - Decisão 2: Justificativa
-    validations:
-      required: false
-
-  - type: textarea
-    id: results
-    attributes:
-      label: 📊 Resultados
-      description: O que funcionou ou não funcionou
-      placeholder: Descreva os resultados obtidos...
-    validations:
-      required: false
-
-  - type: textarea
-    id: next
-    attributes:
-      label: 🚀 Próximos Passos
-      description: Tarefas pendentes (serão convertidas em checkboxes)
-      placeholder: |
-        - Tarefa 1
-        - Tarefa 2
-        - Tarefa 3
+        Descreva a entrada...
     validations:
       required: false
 
@@ -85,7 +41,7 @@ body:
     id: notes
     attributes:
       label: 💡 Notas/Observações
-      description: Qualquer informação adicional relevante
+      description: Informações adicionais ou links relevantes
       placeholder: Notas adicionais...
     validations:
       required: false

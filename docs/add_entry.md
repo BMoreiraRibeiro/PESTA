@@ -4,6 +4,161 @@ title: Adicionar Entrada ao Diário
 
 # ➕ Nova Entrada no Diário Técnico
 
+Preencha o formulário abaixo e clique em "Adicionar ao Diário" para criar a issue pré-preenchida no GitHub.
+
+---
+
+<div style="max-width: 800px; margin: 0 auto;">
+
+<form id="entryForm" style="background: var(--md-code-bg-color); padding: 2rem; border-radius: 8px;">
+  
+  <div style="margin-bottom: 1.5rem;">
+    <label for="title" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">📌 Título:</label>
+    <input type="text" id="title" placeholder="Ex: Configuração do MkDocs" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; font-size: 1rem;" required>
+  </div>
+
+  <div style="margin-bottom: 1.5rem;">
+    <label for="category" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">🏷️ Tema / Assunto:</label>
+    <select id="category" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; font-size: 1rem;">
+      <option value="Gerais">Gerais</option>
+      <option value="Configuração">Configuração</option>
+      <option value="Documentação">Documentação</option>
+      <option value="Pesquisa">Pesquisa</option>
+      <option value="Decisão">Decisão</option>
+      <option value="Outros">Outros</option>
+    </select>
+  </div>
+
+  <div style="margin-bottom: 1.5rem;">
+    <label for="context" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">📝 Descrição:</label>
+    <textarea id="context" rows="6" placeholder="Descreva o que fez, encontrou ou pretende documentar" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; font-size: 1rem; font-family: inherit; resize: vertical;"></textarea>
+  </div>
+
+  <div style="margin-bottom: 1.5rem;">
+    <label for="notes" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">💡 Notas:</label>
+    <textarea id="notes" rows="3" placeholder="Observações adicionais" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; font-size: 1rem; font-family: inherit; resize: vertical;"></textarea>
+  </div>
+
+  <div style="display: flex; gap: 1rem;">
+    <button type="button" onclick="submitToGitHub()" style="flex: 1; padding: 0.75rem; background: #4caf50; color: white; border: none; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer;">
+      🚀 Adicionar ao Diário
+    </button>
+    <button type="button" onclick="previewEntry()" style="flex: 1; padding: 0.75rem; background: #3f51b5; color: white; border: none; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer;">
+      👁️ Pré-visualizar
+    </button>
+  </div>
+
+</form>
+
+<div id="preview" style="margin-top: 2rem; display: none;">
+  <h3>👁️ Pré-visualização:</h3>
+  <div style="background: var(--md-code-bg-color); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #3f51b5;">
+    <pre id="previewText" style="margin: 0; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.95rem;"></pre>
+  </div>
+</div>
+
+<div id="result" style="margin-top: 2rem; display: none;">
+  <div id="resultContent"></div>
+</div>
+
+</div>
+
+<script>
+const REPO_OWNER = 'BMoreiraRibeiro';
+const REPO_NAME = 'PESTA';
+
+function generateMarkdown() {
+  const title = document.getElementById('title').value || 'Sem título';
+  const category = document.getElementById('category').value;
+  const context = document.getElementById('context').value;
+  const notes = document.getElementById('notes').value;
+  const date = new Date().toISOString().split('T')[0];
+
+  let markdown = `## [${date}] - ${title}\n\n`;
+  markdown += `**Tema/Assunto:** ${category}\n\n`;
+
+  if (context.trim()) {
+    markdown += `### Descrição\n${context.trim()}\n\n`;
+  }
+
+  if (notes.trim()) {
+    markdown += `### Notas\n${notes.trim()}\n\n`;
+  }
+
+  markdown += `---\n`;
+  return markdown;
+}
+
+function previewEntry() {
+  const markdown = generateMarkdown();
+  document.getElementById('previewText').textContent = markdown;
+  document.getElementById('preview').style.display = 'block';
+  document.getElementById('preview').scrollIntoView({ behavior: 'smooth' });
+}
+
+function generateIssueBody() {
+  const title = document.getElementById('title').value || 'Sem título';
+  const category = document.getElementById('category').value;
+  const context = document.getElementById('context').value || '_No response_';
+  const notes = document.getElementById('notes').value || '_No response_';
+
+  let body = `### 📌 Título da Entrada\n\n${title}\n\n`;
+  body += `### 🏷️ Tema / Assunto\n\n${category}\n\n`;
+  body += `### 📝 Descrição\n\n${context}\n\n`;
+  body += `### 💡 Notas/Observações\n\n${notes}\n`;
+
+  return body;
+}
+
+function submitToGitHub() {
+  const title = document.getElementById('title').value;
+  if (!title.trim()) {
+    alert('❌ Por favor, preencha pelo menos o título!');
+    return;
+  }
+
+  const issueTitle = `[DIÁRIO] ${title}`;
+  const issueBody = generateIssueBody();
+
+  const issueUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/issues/new?` +
+    `title=${encodeURIComponent(issueTitle)}&` +
+    `body=${encodeURIComponent(issueBody)}&` +
+    `labels=diário,documentação`;
+
+  document.getElementById('resultContent').innerHTML = `
+    <div style="padding: 1.5rem; background: #d4edda; border-left: 4px solid #28a745; border-radius: 4px;">
+      <h3 style="margin-top: 0; color: #155724;">✅ Preparado para submeter!</h3>
+      <p style="color: #155724;">Clique no botão abaixo para criar a issue no GitHub. A GitHub Action processará automaticamente a entrada.</p>
+      <a href="${issueUrl}" target="_blank" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #28a745; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
+        🚀 Abrir GitHub Issue
+      </a>
+    </div>
+  `;
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+
+---
+
+[📝 Ver Diário Técnico](technical_diary.md) | [🏠 Voltar ao Início](index.md)
+
+---
+---
+title: Adicionar Entrada ao Diário
+---
+
+# ➕ Nova Entrada no Diário Técnico
+
+Preencha o formulário acima e clique em "Adicionar ao Diário" para criar a issue pré-preenchida no GitHub.
+
+---
+
+title: Adicionar Entrada ao Diário
+---
+
+# ➕ Nova Entrada no Diário Técnico
+
 Preencha o formulário abaixo e clique em "Adicionar ao Diário" para criar automaticamente a entrada.
 
 ---
@@ -89,181 +244,15 @@ const REPO_NAME = 'PESTA';
 
 function generateMarkdown() {
   const title = document.getElementById('title').value || 'Sem título';
-  const category = document.getElementById('category').value;
-  const context = document.getElementById('context').value;
-  const done = document.getElementById('done').value;
-  const decisions = document.getElementById('decisions').value;
-  const results = document.getElementById('results').value;
-  const next = document.getElementById('next').value;
-  const notes = document.getElementById('notes').value;
+  ---
+  title: Adicionar Entrada ao Diário
+  ---
 
-  const date = new Date().toISOString().split('T')[0];
+  # ➕ Nova Entrada no Diário Técnico
 
-  let markdown = `## [${date}] - ${title}\n\n`;
-  markdown += `**Categoria:** ${category}\n\n`;
-  
-  if (context.trim()) {
-    markdown += `### Contexto\n${context.trim()}\n\n`;
-  }
-  
-  if (done.trim()) {
-    const doneLines = done.split('\n').filter(line => line.trim()).map(line => {
-      const trimmed = line.trim();
-      return trimmed.startsWith('-') ? trimmed : `- ${trimmed}`;
-    }).join('\n');
-    markdown += `### O Que Foi Feito\n${doneLines}\n\n`;
-  }
-  
-  if (decisions.trim()) {
-    const decisionLines = decisions.split('\n').filter(line => line.trim()).map(line => {
-      const trimmed = line.trim();
-      return trimmed.startsWith('-') ? trimmed : `- ${trimmed}`;
-    }).join('\n');
-    markdown += `### Decisões Tomadas\n${decisionLines}\n\n`;
-  }
-  
-  if (results.trim()) {
-    markdown += `### Resultados\n${results.trim()}\n\n`;
-  }
-  
-  if (next.trim()) {
-    const nextLines = next.split('\n').filter(line => line.trim()).map(line => {
-      const trimmed = line.trim();
-      if (trimmed.startsWith('- [ ]') || trimmed.startsWith('- [x]')) return trimmed;
-      if (trimmed.startsWith('-')) return trimmed.replace(/^-\s*/, '- [ ] ');
-      return `- [ ] ${trimmed}`;
-    }).join('\n');
-    markdown += `### Próximos Passos\n${nextLines}\n\n`;
-  }
-  
-  if (notes.trim()) {
-    markdown += `### Notas/Observações\n${notes.trim()}\n\n`;
-  }
-  
-  markdown += `---\n`;
+  Preencha o formulário acima e clique em "Adicionar ao Diário" para criar a issue pré-preenchida no GitHub.
 
-  return markdown;
-}
-
-function previewEntry() {
-  const markdown = generateMarkdown();
-  document.getElementById('previewText').textContent = markdown;
-  document.getElementById('preview').style.display = 'block';
-  document.getElementById('preview').scrollIntoView({ behavior: 'smooth' });
-}
-
-function generateIssueBody() {
-  const title = document.getElementById('title').value || 'Sem título';
-  const category = document.getElementById('category').value;
-  const context = document.getElementById('context').value || '_No response_';
-  const done = document.getElementById('done').value || '_No response_';
-  const decisions = document.getElementById('decisions').value || '_No response_';
-  const results = document.getElementById('results').value || '_No response_';
-  const next = document.getElementById('next').value || '_No response_';
-  const notes = document.getElementById('notes').value || '_No response_';
-
-  let body = `### 📌 Título da Entrada\n\n${title}\n\n`;
-  body += `### 🏷️ Categoria\n\n${category}\n\n`;
-  body += `### 📝 Contexto\n\n${context}\n\n`;
-  body += `### ✅ O Que Foi Feito\n\n${done}\n\n`;
-  body += `### 🎯 Decisões Tomadas\n\n${decisions}\n\n`;
-  body += `### 📊 Resultados\n\n${results}\n\n`;
-  body += `### 🚀 Próximos Passos\n\n${next}\n\n`;
-  body += `### 💡 Notas/Observações\n\n${notes}\n`;
-
-  return body;
-}
-
-async function submitToGitHub() {
-  const title = document.getElementById('title').value;
-  
-  if (!title.trim()) {
-    alert('❌ Por favor, preencha pelo menos o título!');
-    return;
-  }
-
-  const issueTitle = `[DIÁRIO] ${title}`;
-  const issueBody = generateIssueBody();
-
-  // Criar URL para criar issue com conteúdo pré-preenchido
-  const issueUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/issues/new?` +
-    `title=${encodeURIComponent(issueTitle)}&` +
-    `body=${encodeURIComponent(issueBody)}&` +
-    `labels=diário,documentação`;
-
-  // Mostrar mensagem de sucesso
-  document.getElementById('resultContent').innerHTML = `
-    <div style="padding: 1.5rem; background: #d4edda; border-left: 4px solid #28a745; border-radius: 4px;">
-      <h3 style="margin-top: 0; color: #155724;">✅ Preparado para submeter!</h3>
-      <p style="color: #155724;">Clique no botão abaixo para criar a issue no GitHub. A GitHub Action processará automaticamente a entrada.</p>
-      <a href="${issueUrl}" target="_blank" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #28a745; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
-        🚀 Abrir GitHub Issue
-      </a>
-      <p style="margin-top: 1rem; font-size: 0.9rem; color: #155724;">
-        <strong>Próximos passos:</strong><br>
-        1. Clique no botão acima<br>
-        2. Verifique o conteúdo no GitHub<br>
-        3. Clique em "Submit new issue"<br>
-        4. A entrada será adicionada automaticamente em ~30 segundos!
-      </p>
-    </div>
-  `;
-  document.getElementById('result').style.display = 'block';
-  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
-}
-</script>
-
----
-
-## 📖 Como funciona
-
-1. **Preencha** o formulário acima
-2. **Pré-visualize** (opcional) para ver como ficará
-3. **Clique** em "Adicionar ao Diário"
-4. **Será redirecionado** para o GitHub com a issue pré-preenchida
-5. **Submeta** a issue no GitHub
-6. **A GitHub Action** processará automaticamente e:
-   - ✅ Adicionará a entrada ao diário
-   - ✅ Fará commit e push
-   - ✅ Fechará a issue
-   - ✅ Comentará com o link para visualização
-
----
-
-## � Dicas
-
-- Todos os campos são opcionais exceto o título
-- Use `-` no início das linhas para criar listas
-- Os "Próximos Passos" serão convertidos automaticamente em checkboxes `- [ ]`
-- Pode pré-visualizar antes de enviar
-
----
-
-[📝 Ver Diário Técnico](technical_diary.md) | [🏠 Voltar ao Início](index.md)
-
-<div style="max-width: 800px; margin: 0 auto;">
-
-<form id="entryForm" style="background: var(--md-code-bg-color); padding: 2rem; border-radius: 8px;">
-  
-  <div style="margin-bottom: 1.5rem;">
-    <label for="date" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">📅 Data:</label>
-    <input type="date" id="date" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; font-size: 1rem;">
-  </div>
-
-  <div style="margin-bottom: 1.5rem;">
-    <label for="title" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">📌 Título:</label>
-    <input type="text" id="title" placeholder="Ex: Configuração do MkDocs" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; font-size: 1rem;">
-  </div>
-
-  <div style="margin-bottom: 1.5rem;">
-    <label for="category" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">🏷️ Categoria:</label>
-    <select id="category" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; font-size: 1rem;">
-      <option value="Hardware">Hardware</option>
-      <option value="Software">Software</option>
-      <option value="Testes">Testes</option>
-      <option value="Integração">Integração</option>
-      <option value="Pesquisa">Pesquisa</option>
-      <option value="Decisão">Decisão</option>
+  ---
     </select>
   </div>
 
