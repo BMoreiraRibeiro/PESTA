@@ -29,6 +29,10 @@ function addTaskButtons(item) {
     // Cria container para os botões
     const actionsContainer = document.createElement('div');
     actionsContainer.className = 'task-actions';
+    actionsContainer.style.display = 'flex';
+    actionsContainer.style.gap = '4px';
+    actionsContainer.style.marginLeft = 'auto';
+    actionsContainer.style.flexShrink = '0';
 
     // Botão "+" para adicionar subtarefa
     const addButton = document.createElement('button');
@@ -61,9 +65,13 @@ function addTaskButtons(item) {
     // Adiciona o container ao item
     const label = item.querySelector('label');
     if (label) {
+        // Garantir que o label tem o estilo correto
         label.style.display = 'flex';
         label.style.alignItems = 'center';
         label.style.gap = '8px';
+        label.style.width = '100%';
+        label.style.flexWrap = 'nowrap';
+        
         label.appendChild(actionsContainer);
     }
 }
@@ -131,13 +139,18 @@ function createSubtaskElement(text) {
     label.style.display = 'flex';
     label.style.alignItems = 'center';
     label.style.gap = '8px';
+    label.style.width = '100%';
+    label.style.flexWrap = 'nowrap';
     
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.className = 'task-list-control';
+    checkbox.style.flexShrink = '0';
     
     const span = document.createElement('span');
     span.textContent = text;
+    span.style.flex = '1';
+    span.style.wordWrap = 'break-word';
     
     label.appendChild(checkbox);
     label.appendChild(span);
@@ -283,11 +296,24 @@ style.textContent = `
         display: flex !important;
         align-items: center !important;
         gap: 8px !important;
+        flex-wrap: nowrap !important;
     }
 
     /* Espaçamento do texto da tarefa */
     .task-list-item label > span {
         flex: 1;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    /* Garantir que checkbox não encolhe */
+    .task-list-item .task-list-control {
+        flex-shrink: 0;
+    }
+
+    /* Garantir que botões não encolhem */
+    .task-actions {
+        flex-shrink: 0;
     }
 
     /* Responsivo para mobile */
