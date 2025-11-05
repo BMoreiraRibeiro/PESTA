@@ -79,8 +79,8 @@ jobs:
               author: { name: 'github-actions[bot]', email: 'github-actions[bot]@users.noreply.github.com' }
             });
 
-            // try to update the index file with a link
-            const indexPath = 'docs/technical_diary.md';
+            // try to update the index file with a link inside docs/technical_diary_entries/index.md
+            const indexPath = 'docs/technical_diary_entries/index.md';
             try {
               const indexResp = await github.rest.repos.getContent({ owner, repo, path: indexPath });
               const indexSha = indexResp.data.sha;
@@ -94,8 +94,8 @@ jobs:
                   break;
                 }
               }
-              const relativePath = `technical_diary_entries/${filename}`;
-              const linkLine = `- [${date} - ${title}](./${relativePath})`;
+              // since index.md is inside the same folder, link directly to the filename
+              const linkLine = `- [${date} - ${title}](./${filename})`;
               indexLines.splice(insertIndex, 0, '', linkLine, '');
               const newIndexContent = indexLines.join('\n');
               const newIndexBase64 = Buffer.from(newIndexContent, 'utf8').toString('base64');
@@ -110,7 +110,23 @@ jobs:
                 author: { name: 'github-actions[bot]', email: 'github-actions[bot]@users.noreply.github.com' }
               });
             } catch (err) {
-              core && core.info && core.info(`Índice não atualizado: ${err.message}`);
+              // if the index doesn't exist, create a new one with header + link
+              try {
+                const header = `# Diário Técnico — Índice\n\n`;
+                const newIndexContent = header + `- [${date} - ${title}](./${filename})\n`;
+                const newIndexBase64 = Buffer.from(newIndexContent, 'utf8').toString('base64');
+                await github.rest.repos.createOrUpdateFileContents({
+                  owner,
+                  repo,
+                  path: indexPath,
+                  message: `docs: criar índice do diário e adicionar ${filename} [skip ci]`,
+                  content: newIndexBase64,
+                  committer: { name: 'github-actions[bot]', email: 'github-actions[bot]@users.noreply.github.com' },
+                  author: { name: 'github-actions[bot]', email: 'github-actions[bot]@users.noreply.github.com' }
+                });
+              } catch (err2) {
+                core && core.info && core.info(`Índice não atualizado: ${err.message}; criação falhou: ${err2.message}`);
+              }
             }
 
             // Comment and close the issue
