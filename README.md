@@ -114,7 +114,31 @@ _(Será atualizado conforme o código for desenvolvido)_
 ### Software Necessário
 - Raspberry Pi OS (Bullseye ou mais recente)
 - Python 3.9+
-- Bibliotecas (ver `requirements.txt` quando disponível)
+- Bibliotecas (ver `requirements.txt`)
+
+### Instalação de Dependências
+Para instalar as dependências do projeto (necessário para gerar a documentação):
+
+1. **Criar ambiente virtual (recomendado):**
+```bash
+python3 -m venv venv
+source venv/bin/activate  # No Windows: venv\Scripts\activate
+```
+
+2. **Instalar dependências:**
+```bash
+pip install -r requirements.txt
+```
+
+Para servir a documentação localmente:
+```bash
+mkdocs serve
+```
+
+Para construir a documentação:
+```bash
+mkdocs build
+```
 
 ---
 

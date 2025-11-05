@@ -91,3 +91,6 @@ htmlcov/
 # System files
 Thumbs.db
 desktop.ini
+
+# MkDocs
+site/
